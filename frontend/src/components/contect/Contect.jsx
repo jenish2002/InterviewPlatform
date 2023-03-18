@@ -5,7 +5,6 @@ const Contect = () => {
   const { me, callAccepted, name, setname, callEnded, leaveCall,videoOn, callUser } =
     useContext(Webrtccontext);
   console.log(me);
-  console.log("HIi");
   const [idToCall, setidToCall] = useState("");
   return (
     <div>

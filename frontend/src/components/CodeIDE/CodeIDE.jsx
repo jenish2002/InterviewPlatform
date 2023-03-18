@@ -89,7 +89,7 @@ const CodeIDE = () => {
         <div className="col-md-9 mh-100 ">
           {/* <form onSubmit={codesubmit} style={{"height":700.4+"px"}}> */}
           <form onSubmit={codesubmit} className="mh-100">
-            <i class="fa-solid fa-code"></i>
+            <i className="fa-solid fa-code"></i>
 
             <div
               className="container border border-dark rounded-3  row mt-2"

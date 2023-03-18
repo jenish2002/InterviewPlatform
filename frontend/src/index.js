@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import Webrtcconnection from "./context/webrtc/webrtcconnection";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <>
     {/* <Webrtcontext> */}
     <Webrtcconnection>
     <BrowserRouter>
@@ -15,6 +15,6 @@ root.render(
     </BrowserRouter>
     </Webrtcconnection>
     {/* </Webrtcontext> */}
-  </React.StrictMode>
+  </>
 );
 

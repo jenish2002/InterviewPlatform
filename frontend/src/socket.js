@@ -7,5 +7,6 @@ export const initSocket = async () => {
         timeout: 10000,
         transports: ['websocket'],
     };
-    return io('http://localhost:3001', options);
+    // return io('http://localhost:3001', options);
+    return io('https://interviewplatformbackend.onrender.com', options);
 };
