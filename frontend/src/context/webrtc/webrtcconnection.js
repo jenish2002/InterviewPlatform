@@ -29,12 +29,13 @@ const Webrtcconnection = ({ children }) => {
   // const reactNavigator = useNavigate();
 
   const videoOn = (video = false, audio = false) => {
-    console.log(navigator.mediaDevices);
     navigator.mediaDevices
       .getUserMedia({ video: video, audio: audio })
       .then((currentStream) => {
-        setStream(currentStream);
-        myVideo.current.srcObject = currentStream;
+        if (video) {
+          setStream(currentStream);
+          myVideo.current.srcObject = currentStream;
+        }
       })
       .catch((ex) => {
         console.log(ex);
@@ -71,9 +72,7 @@ const Webrtcconnection = ({ children }) => {
       });
     };
     init();
-    videoOn(false, false);
     // socket.current = io('http://localhost:3001');
-
     console.log(recivemessage);
   }, []);
 

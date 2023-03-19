@@ -4,6 +4,7 @@ import CallEndIcon from "@mui/icons-material/CallEnd";
 import Chatbox from "../Chatbox/Chatbox";
 import Webrtcconnection from "../../context/webrtc/webrtcconnection";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
+import { useEffect } from "react";
 const Bottombar = () => {
   const [video, setVideo] = useState(false);
   const [microphone, setMicrophone] = useState(false);
@@ -19,14 +20,18 @@ const Bottombar = () => {
     if (icon.classList.contains(`fa-${id}`)) {
       icon.classList.remove(`fa-${id}`);
       icon.classList.add(`fa-${id}-slash`);
+      icon.classList.add("button-icons-off");
     } else {
       icon.classList.remove(`fa-${id}-slash`);
+      icon.classList.remove("button-icons-off");
       icon.classList.add(`fa-${id}`);
     }
-    videoOn(video, microphone);
   };
+  useEffect(() => {
+    videoOn(video, microphone);
+  }, [video, microphone])
   return (
-    <nav className="border-3 border rounded-4 border-secondary bg-white bottombar-width ps-5 pe-5 navbar navbar-expand navbar-white">
+    <nav className="border-3 border rounded-4 border-secondary bg-white bottombar-width px-5 navbar navbar-expand navbar-white">
       <div className="navbar-collapse justify-content-center">
         <ul className="navbar-nav">
           <li
@@ -54,7 +59,7 @@ const Bottombar = () => {
             <CallEndIcon />
           </li>
           <li
-            className="nav-link nav-item rounded-pill button-icons button-icons-off me-3"
+            className="nav-link nav-item rounded-pill button-icons"
             data-bs-toggle="tooltip"
             data-bs-placement="right"
             title="Chat"

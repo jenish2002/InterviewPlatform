@@ -32,7 +32,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(98, 98, 98);
+  background-color: rgb(70, 70, 70);
 }
 
 .navbar-white {
@@ -46,7 +46,7 @@
 }
 
 .button-icons:hover {
-  background-color: rgb(70, 70, 70);
+  background-color: rgb(83, 83, 83);
 }
 
 .button-icons-off {
