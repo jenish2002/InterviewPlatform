@@ -5,6 +5,7 @@ import Header from "../Header/Header";
 import Main from '../Main/Main'
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
 import "./home.css";
+import Videocomponent from "../VideoComponent/Videocomponent";
 const Home = () => {
   const {
     name,
@@ -30,12 +31,13 @@ const Home = () => {
   }, [connectionRef.current]);
   return (
     <>
-    <Main />
-      {/* <div className="mx-2 w-100 d-flex flex-column align-items-center p-2 container">
-        <Header />
-        <Chatbox />
-        <Bottombar />
-      </div> */}
+    {/* <Main /> */}
+      <div className="d-flex flex-column vw-100">
+        <Videocomponent />
+        {/* <Header />
+        <Chatbox /> */}
+        {/* <Bottombar />  */}
+      </div>
     </>
   );
 };
