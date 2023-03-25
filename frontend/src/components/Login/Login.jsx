@@ -12,7 +12,7 @@ function Login() {
       <div className="d-flex align-items-start text-container flex-column flex-fill">
         <h1 className="mb-2">Welcome to</h1>
         <h1 className="mb-5">Interview Platform</h1>
-        <p className="mb-5 fs-2">Start your Journey Today ..!!</p>
+        <p className="mb-5 fs-2">Start your Journey Today...!!!</p>
         <button
           onClick={onSignIn}
           className="btn btn-dark sign-in-button fs-3 ps-4 pt-2 pb-2 pe-4 text-light mt-5 mb-5 d-flex align-items-center justify-content-between"
