@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Bottombar = () => {
   const [video, setVideo] = useState(false);
   const [microphone, setMicrophone] = useState(false);
-  const { videoOn, handlemessage } = useContext(Webrtccontext);
+  const { videoOn, videoOff, handlemessage } = useContext(Webrtccontext);
   const turnOn = (event) => {
     let id = event.target.id;
     let icon = event.target;
@@ -28,7 +28,7 @@ const Bottombar = () => {
     }
   };
   useEffect(() => {
-    videoOn(video, microphone);
+    video ? videoOn(video, microphone) : videoOff();
   }, [video, microphone])
   return (
     <nav className="border-3 border rounded-4 border-secondary bg-white bottombar-width px-5 navbar navbar-expand navbar-white">

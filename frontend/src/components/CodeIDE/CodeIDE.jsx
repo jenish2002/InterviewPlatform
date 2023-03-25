@@ -10,7 +10,6 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
-import { maxWidth } from "@mui/system";
 const CodeIDE = () => {
   const editorRef = useRef(null);
   const code = useRef("");
@@ -83,8 +82,8 @@ const CodeIDE = () => {
     <div className="font-size my-3 ms-3 d-flex flex-row vw-100">
       <form className="d-flex flex-column flex-fill" onSubmit={codesubmit}>
         <div
-          className="d-flex flex-fill flex-shrink-0 rounded-3 p-1"
-          style={{ backgroundColor: "#272935"}}
+          className="d-flex flex-fill rounded-3 p-1"
+          style={{ backgroundColor: "#272935", height: '860px', width: '1340px'}}
         >
           <textarea
             className="h-75 border border-white"
@@ -110,14 +109,15 @@ const CodeIDE = () => {
           </button>
         </div>
       </form>
-      <div className="d-flex flex-column ms-4 mt-2 me-3">
+      <div className="d-flex flex-column ms-4 mt-2 me-3" style={{width: '350px'}}>
         <h5>Input:</h5>
-        <textarea className="w-100 h-30 mt-1" rows="4" ref={input} />
+        <textarea className="w-100 h-30 mt-1" rows="4" cols="25" ref={input} />
         <h5 className="mt-4">Output:</h5>
         <textarea
           value={output.current.value}
           className="w-100 h-30 mt-1"
-          rows="5"
+          cols="25"
+          rows="5" readOnly
           ref={output}
         />
       </div>
