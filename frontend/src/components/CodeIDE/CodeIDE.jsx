@@ -10,14 +10,20 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
+import { useNavigate } from "react-router-dom";
 const CodeIDE = () => {
   const editorRef = useRef(null);
   const code = useRef("");
   const input = useRef("");
   const output = useRef("");
   const [language, setLanguage] = useState("c++");
-  const { socket, otherUser } = useContext(Webrtccontext);
+  const { socket, otherUser, isLogin } = useContext(Webrtccontext);
+  const navigate = useNavigate();
   useEffect(() => {
+    if (!isLogin) {
+      navigate("/login", { replace: true });
+      return;
+    }
     async function init() {
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("realtimeEditor"),
@@ -70,9 +76,12 @@ const CodeIDE = () => {
       input: input.current.value,
     };
     try {
-      const res = await axios.post("https://codex-api.herokuapp.com/", detail);
+      const res = await axios.post("https://api.codex.jaagrav.in/", detail);
       console.log(res.data);
       output.current.value = res.data.output;
+      if(res.data.error){
+        output.current.value=res.data.error
+      }
     } catch (error) {
       console.log(error);
     }

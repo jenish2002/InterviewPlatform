@@ -5,8 +5,9 @@ export const initSocket = async () => {
         'force new connection': true,
         reconnectionAttempt: 'Infinity',
         timeout: 10000,
+        Credential:true,
         transports: ['websocket'],
     };
-    // return io('http://localhost:3001', options);
-    return io('https://interviewplatformbackend.onrender.com', options);
+    return io('http://localhost:3006', options);
+    // return io('https://interviewplatformbackend.onrender.com', options);
 };

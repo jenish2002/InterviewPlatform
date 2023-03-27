@@ -1,6 +1,7 @@
 import Webrtccontext from "./Webrtccontext";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
+import useSound from "use-sound";
 import {
   useLocation,
   useNavigate,
@@ -12,6 +13,7 @@ import { initSocket } from "../../socket";
 import React, { useEffect, useRef, useState } from "react";
 import { unstable_composeClasses } from "@mui/material";
 const Webrtcconnection = ({ children }) => {
+  const [play] = useSound("notify.mp3");
   const [otherUser, setOtherUser] = useState("");
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
@@ -20,6 +22,7 @@ const Webrtcconnection = ({ children }) => {
   const [call, setCall] = useState({});
   const [me, setMe] = useState("");
   const [message, setmessage] = useState("");
+  const [isLogin, setLogin] = useState(false);
   // const [room, setroom] = useState("");
   const [recivemessage, setrecivemessage] = useState("");
   let socket = useRef(null);
@@ -28,27 +31,38 @@ const Webrtcconnection = ({ children }) => {
   const connectionRef = useRef();
   // const reactNavigator = useNavigate();
 
-  const videoOn = (video = false, audio = false) => {
+  function addmedia(stream) {
+    connectionRef.current.addStream(stream);
+  }
+
+  const videoOn = (video = true, audio = false) => {
     navigator.mediaDevices
       .getUserMedia({ video: video, audio: audio })
       .then((currentStream) => {
-        if (video) {
-          setStream(currentStream);
-          myVideo.current.srcObject = currentStream;
-        }
+        setStream(currentStream);
+        myVideo.current.srcObject = currentStream;
       })
       .catch((ex) => {
         console.log(ex);
       });
   };
-  useEffect(() => {
-    // navigator.mediaDevices.getUserMedia({audio:true, video:true})
-    // .then(stream1 => myVideo.srcObject = stream1)
-    // .then(stream1 => setStream(stream1))
-    // .catch(function(err) {
-    //    console.log(err);
-    // });
 
+  const videoResume = () => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((currentStream) => {
+        setStream(currentStream);
+        myVideo.current.srcObject = currentStream;
+        connectionRef.current.addStream(currentStream);
+      });
+  };
+
+  const videoOff = () => {
+    myVideo.current.srcObject = null;
+    stream.getTracks().forEach((track) => track.stop());
+    setStream(null);
+  };
+  useEffect(() => {
     const init = async () => {
       socket.current = await initSocket();
       socket.current.on("connect_error", (err) => handleErrors(err));
@@ -60,72 +74,63 @@ const Webrtcconnection = ({ children }) => {
       }
       socket.current.on("me", (id) => setMe(id));
       console.log(me);
-      socket.current.on("callUser", ({ from, name: callerName, signal }) => {
-        setCall({ isReceivingCall: true, from, name: callerName, signal });
+      socket.current.on("callUser", ({ from, name, signal }) => {
+        play();
+        name = JSON.parse(name);
+        setCall({ isReceivingCall: true, from, name, signal });
       });
       socket.current.on("recieve_message", (data) => {
         console.log(data);
         setrecivemessage(data.message);
-        // setTimeout(() => {
-        //   setrecivemessage("");
-        // }, 10000);
       });
     };
     init();
-    // socket.current = io('http://localhost:3001');
+    videoOn();
     console.log(recivemessage);
   }, []);
 
   const callUser = (id) => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
+    const user = JSON.parse(localStorage.getItem("user"));
+    const calleruser = {
+      name: user.name,
+    };
+    console.log(calleruser);
     setOtherUser(id);
-    peer.on("signal", (data) => {
+    let localstream;
+    const peer1 = new Peer({ initiator: true, trickle: false, stream });
+    peer1.on("signal", (data) => {
       socket.current.emit("callUser", {
         userToCall: id,
         signalData: data,
         from: me,
-        name,
+        name: JSON.stringify(calleruser),
       });
     });
-
-    peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
+    peer1.on("stream", (currentStream) => {
+      if (userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
     });
-
     socket.current.on("callAccepted", (signal) => {
       setCallAccepted(true);
-
-      peer.signal(signal);
+      peer1.signal(signal);
     });
-    // const message=()=>{
-    //   peer.on("connect",()=>{
-    //     peer.send("Hii This is Vatsal");
-    // })
-    // }
-
-    // peer.on("data",(data)=>{console.log(data)})
     connectionRef.current = peer;
   };
 
   const answerCall = () => {
     setCallAccepted(true);
     setOtherUser(call.from);
-    const peer = new Peer({ initiator: false, trickle: false, stream });
-
-    peer.on("signal", (data) => {
+    const peer2 = new Peer({ initiator: false, trickle: false, stream });
+    peer2.on("signal", (data) => {
       socket.current.emit("answerCall", { signal: data, to: call.from });
     });
-
-    peer.on("stream", (currentStream) => {
+    peer2.on("stream", (currentStream) => {
       userVideo.current.srcObject = currentStream;
     });
-
-    //  peer.on("data",(data)=>{
-    //   console.log(data)
-    //  })
-    peer.signal(call.signal);
-
-    connectionRef.current = peer;
+    peer2.signal(call.signal);
+    connectionRef.current = peer2;
   };
 
   // const handlemessage=()=>{
@@ -162,12 +167,11 @@ const Webrtcconnection = ({ children }) => {
         setName,
         callEnded,
         me,
-        // handlemessage,
         callUser,
         leaveCall,
         answerCall,
-        // showMyFace
         videoOn,
+        videoOff,
         message,
         setmessage,
         recivemessage,
@@ -175,6 +179,8 @@ const Webrtcconnection = ({ children }) => {
         socket,
         otherUser,
         connectionRef,
+        isLogin,
+        setLogin,
       }}
     >
       {children}

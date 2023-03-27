@@ -1,7 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "../Sidebar/profileImage.jpg";
+import { useNavigate } from "react-router-dom";
+import Webrtccontext from "../../context/webrtc/Webrtccontext";
+import { ToastContainer, toast } from "react-toastify";
 
 function Main() {
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const { me, isLogin } = useContext(Webrtccontext);
+  const sendLink = async () => {
+    const userEmail = JSON.parse(localStorage.getItem("user")).email;
+    console.log(userEmail);
+    try {
+      const response = await fetch(`http://localhost:3006/api/email/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authtoken: localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          from: `${userEmail}`,
+          to: `${email}`,
+          displayName: "InterViewPlatform",
+          subject: "Interview Platform",
+          message: `Join Interview Using this link http://localhost:3000/InterviewPage/${me}`,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleClick = async (e) => {
+    if (e.target.innerText == "Create meeting") {
+      await sendLink();
+      toast(
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <p>Wait till Interviewee gives call</p>
+        </div>
+      )
+    } else {
+      navigate(`/InterviewPage/${email}`);
+    }
+  };
+  useEffect(() => {
+    if (!localStorage.getItem('loggedIn')) {
+      navigate("/login", { replace: true });
+    }
+    else {
+      (async () => {
+        const request = await fetch("http://localhost:3006/auth/login/success", {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+          },
+        });
+        const res = await request.json();
+        if (request.status == 200) {
+          console.log(res.user.AUTHTOKEN);
+          console.log(localStorage.getItem("loggedIn"));
+          localStorage.setItem("token", res.user.AUTHTOKEN);
+          localStorage.setItem("user", JSON.stringify(res.user.user));
+        }
+      })();
+    }
+  }, []);
   const [role, setRole] = useState("interviewee");
   return (
     <div className="d-flex vh-100 vw-100 align-items-center text-dark ps-5">
@@ -32,14 +97,14 @@ function Main() {
           </label>
         </div>
         <div className="d-flex justify-content-center me-3 my-5">
-          <button className="btn btn-dark sign-in-button fs-4 ps-4 py-2 pe-4 text-light me-5">
+          <button className="btn btn-dark sign-in-button fs-4 ps-4 py-2 pe-4 text-light me-5" onClick={handleClick}>
             {role == "interviewee" ? "Join meeting" : "Create meeting"}
           </button>
           <input
             className="my-1 p-2"
             type="text"
-            placeholder="Meeting Id"
-            hidden={role == "interviewer"}
+            placeholder={role == "interviewer" ? "Email Id" : "Meeting Id"}
+            onChange={(e)=>{setEmail(e.target.value)}}
           />
         </div>
       </div>
