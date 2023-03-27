@@ -1,47 +1,44 @@
 const express=require("express");
+const cookieSession = require('cookie-session');
+const connectToMongoAtlas=require("./data_access/databaseconnection")
 const app=express();
+const cookieParser = require("cookie-parser")
+const passport = require("passport");
+app.use(express.json());
 const server = require("http").Server(app);
 const cors=require("cors")
-const io=require("socket.io")(server ,{
-	cors: {
-		origin: "http://localhost:3000",
-		methods: [ "GET", "POST" ]
-	}
-});
-app.use(cors());
+
+const makeSocketConnection=require("./routes/socket")
+require('./passport');
+const io=require("socket.io")(server);
+connectToMongoAtlas()
+makeSocketConnection({io})();
 app.get("/",(req,res)=>{
     res.send("running");
 })
-
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ['key1', 'key2'],
+    maxAge: 24 * 60 * 60 * 100
+  })
+);
+app.use(cookieParser());
+app.use(passport.initialize());
+// deserialize cookie from the browser
+app.use(passport.session());
+app.use(
+	cors({
+	  origin: "http://localhost:3000", // allow to server to accept request from different origin
+	  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	  credentials: true // allow session cookie from browser to pass through
+	 })
+  );
+app.use("/auth",require("./routes/intervieweeAuth"))
+app.use("/api/email",require("./routes/email"))
+app.use("/api/compiler",require("./routes/compiler"))
 //socket code
-io.on("connection", (socket) => {
-	socket.emit("me", socket.id);
-     console.log(socket.id)
-	socket.on("disconnect", () => {
-		socket.broadcast.emit("callEnded")
-	});
 
-	socket.on("callUser", ({ userToCall, signalData, from, name }) => {
-		io.to(userToCall).emit("callUser", { signal: signalData, from, name });
-	});
-
-	socket.on("answerCall", (data) => {
-		io.to(data.to).emit("callAccepted", data.signal)
-	});
-	socket.on("send_message",(data)=>{
-		console.log(data)
-		socket.to(data.otherUser).emit("recieve_message",data)
-	})
-	socket.on("code-change",(data)=>{
-		console.log(data)
-		socket.to(data.otherUser).emit("code-change",data.code)
-	})
-	socket.on('canvas-data',(data)=>{
-		
-		socket.to(data.otherUser).emit("canvas-data",data)
-	})
-});
-server.listen(3001,()=>{
+server.listen(3006,()=>{
     console.log("server started");
 })  
-
