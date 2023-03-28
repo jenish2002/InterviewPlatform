@@ -15,7 +15,8 @@ passport.use(
       clientID:
         "473509240448-erpijneig6pfjtreiut7ngede225ru5f.apps.googleusercontent.com", // Your Credentials here.
       clientSecret: "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", // Your Credentials here.
-      callbackURL: "http://localhost:3006/auth/google/callback",
+      // callbackURL: "http://localhost:3006/auth/google/callback",
+      callbackURL: "https://interviewplatformbackend.onrender.com/auth/google/callback",
       passReqToCallback: true,
       scope: [
         "profile",

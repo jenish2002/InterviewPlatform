@@ -8,6 +8,6 @@ export const initSocket = async () => {
         Credential:true,
         transports: ['websocket'],
     };
-    return io('http://localhost:3006', options);
-    // return io('https://interviewplatformbackend.onrender.com', options);
+    // return io('http://localhost:3006', options);
+    return io('https://interviewplatformbackend.onrender.com', options);
 };
