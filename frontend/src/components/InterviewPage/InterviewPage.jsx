@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import "./video.css";
 import { Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
-import Videocomponent2 from "../VideoComponent/videocomponent2";
 const InterviewPage = (props) => {
   const {
     callAccepted,
@@ -13,7 +11,6 @@ const InterviewPage = (props) => {
     callUser,
   } = useContext(Webrtccontext);
   const { id } = useParams();
-  console.log(id);
   const call = () => {
     videoOn();
     console.log('jp',id);

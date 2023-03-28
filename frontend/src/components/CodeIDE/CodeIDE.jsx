@@ -17,10 +17,10 @@ const CodeIDE = () => {
   const input = useRef("");
   const output = useRef("");
   const [language, setLanguage] = useState("c++");
-  const { socket, otherUser, isLogin } = useContext(Webrtccontext);
+  const { socket, otherUser } = useContext(Webrtccontext);
   const navigate = useNavigate();
   useEffect(() => {
-    if (!isLogin) {
+    if (!localStorage.getItem('loggedIn')) {
       navigate("/login", { replace: true });
       return;
     }

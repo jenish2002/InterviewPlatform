@@ -1,18 +1,18 @@
-import React, {  useContext, useEffect, useRef } from "react";
+import React, {  useContext, useEffect, useRef, useState } from "react";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
 import Bottombar from "../Bottombar/Bottombar";
 import Image from '../Sidebar/profileImage.jpg'
 import Videocomponent2 from "./videocomponent2";
 const Videocomponent = () => {
-  const {myVideo, userVideo, stream} = useContext(Webrtccontext);
-  console.log(stream);
+  const {myVideo, stream, callAccepted, video} = useContext(Webrtccontext);
+  console.log("video",video);
   return (
     <>
-      <div className="d-flex flex-column justify-content-center vw-100">
+      {callAccepted && <div className="d-flex flex-column justify-content-center" style={{width: "180.7vh"}}>
         {stream ? (
           <video
             style={{ objectFit: "cover", height: "92.8vh" }}
-            ref={userVideo}
+            ref={myVideo}
             playsInline
             autoPlay
           />
@@ -24,9 +24,8 @@ const Videocomponent = () => {
             <img src={Image} height={300}></img>
           </div>
         )}
-        <Videocomponent2 />
         <Bottombar />
-      </div>
+      </div>}
     </>
   );
 };

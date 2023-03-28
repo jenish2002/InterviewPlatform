@@ -13,8 +13,10 @@ import { initSocket } from "../../socket";
 import React, { useEffect, useRef, useState } from "react";
 import { unstable_composeClasses } from "@mui/material";
 const Webrtcconnection = ({ children }) => {
-  const [play] = useSound("notify.mp3");
+  console.log('context');
+  const audio = new Audio("/notify.mp3");
   const [otherUser, setOtherUser] = useState("");
+  const [video, setVideo] = useState(true);
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [stream, setStream] = useState();
@@ -36,6 +38,18 @@ const Webrtcconnection = ({ children }) => {
   }
 
   const videoOn = (video = true, audio = false) => {
+    navigator.mediaDevices
+      .getUserMedia({ video: video, audio: audio })
+      .then((currentStream) => {
+        setStream(currentStream);
+        myVideo.current.srcObject = currentStream;
+      })
+      .catch((ex) => {
+        console.log(ex);
+      });
+  };
+
+  const audioOn = (audio = false) => {
     navigator.mediaDevices
       .getUserMedia({ video: video, audio: audio })
       .then((currentStream) => {
@@ -70,12 +84,11 @@ const Webrtcconnection = ({ children }) => {
       function handleErrors(e) {
         console.log("socket error", e);
         toast.error("Socket connection failed, try again later.");
-        // reactNavigator('/');
       }
       socket.current.on("me", (id) => setMe(id));
       console.log(me);
       socket.current.on("callUser", ({ from, name, signal }) => {
-        play();
+        audio.play();
         name = JSON.parse(name);
         setCall({ isReceivingCall: true, from, name, signal });
       });
@@ -88,6 +101,10 @@ const Webrtcconnection = ({ children }) => {
     videoOn();
     console.log(recivemessage);
   }, []);
+
+  useEffect(() => {
+    videoOn(video)
+  }, [video])
 
   const callUser = (id) => {
     const peer = new Peer({ initiator: true, trickle: false, stream });
@@ -159,6 +176,7 @@ const Webrtcconnection = ({ children }) => {
     <Webrtccontext.Provider
       value={{
         call,
+        audioOn,
         callAccepted,
         myVideo,
         userVideo,
@@ -181,6 +199,8 @@ const Webrtcconnection = ({ children }) => {
         connectionRef,
         isLogin,
         setLogin,
+        video,
+        setVideo,
       }}
     >
       {children}

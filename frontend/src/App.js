@@ -7,36 +7,32 @@ import "./App.css";
 import Whiteboard from "./components/WhiteBoard/Whiteboard";
 import Notification from "./components/Notification/Notification";
 import InterviewPage from "./components/InterviewPage/InterviewPage";
-import Main from "./components/Main/Main";
 import Login from "./components/Login/Login";
 import React, { useContext, useState } from "react";
 import Videocomponent from "./components/VideoComponent/Videocomponent";
 import Webrtccontext from "./context/webrtc/Webrtccontext";
 import Videocomponent2 from "./components/VideoComponent/videocomponent2";
 function App() {
-  const { userVideo } = useContext(Webrtccontext);
+  const { callAccepted } = useContext(Webrtccontext);
+  const location = useLocation();
   return (
     <>
-      <Webrtcconnection>
-        <Notification />
-        <div className="d-flex vh-100">
-          {(localStorage.getItem("token")) ? <Sidebar /> : <></>}
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/codeide" element={<CodeIDE />} />
-            <Route path="/whiteboard" element={<Whiteboard />} />
-            <Route path="/main" element={<Main />} />
-            <Route path="/InterviewPage/:id" element={<InterviewPage />} />
-            <Route path="*" element={<h5 className="p-3">Page not Found</h5>} />
-          </Routes>
-          {userVideo && (
-            <div className="d-flex flex-column">
-              <Videocomponent2 />
-            </div>
-          )}
+      <Notification />
+      <div className="d-flex vh-100">
+        {localStorage.getItem("token") ? <Sidebar /> : <></>}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={(!callAccepted) ? <Home /> : <></>} />
+          <Route path="/codeide" element={<CodeIDE />} />
+          <Route path="/whiteboard" element={<Whiteboard />} />
+          <Route path="/InterviewPage/:id" element={<InterviewPage />} />
+          <Route path="*" element={<h5 className="p-3">Page not Found</h5>} />
+        </Routes>
+        <div className="d-flex flex-column">
+          {location.pathname == "/" && <Videocomponent />}
+          <Videocomponent2 />
         </div>
-      </Webrtcconnection>
+      </div>
     </>
   );
 }

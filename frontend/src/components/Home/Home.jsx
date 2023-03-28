@@ -16,7 +16,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      {callAccepted ? <Videocomponent /> : <Main />}
+      {!callAccepted && <Main />}
     </>
   );
 };

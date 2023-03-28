@@ -4,16 +4,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Notification = () => {
   const { answerCall, call, callAccepted, videoOn } = useContext(Webrtccontext);
-  const user = localStorage.getItem("user");
   return (
     <>
       {call.isReceivingCall &&
         !callAccepted &&
         toast(
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <div className="d-flex">
             <p>{call.name.name} is calling:</p>
             <button
-              className="dark"
+              className="btn btn-dark"
               onClick={() => {
                 videoOn();
                 answerCall();

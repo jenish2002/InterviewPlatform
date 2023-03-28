@@ -5,9 +5,8 @@ import Board from "../Board/Board";
 import "./whiteboard.css";
 const Whiteboard = () => {
   const navigate = useNavigate();
-  const { isLogin } = useContext(Webrtccontext);
   useEffect(() => {
-    if (!isLogin) {
+    if (!localStorage.getItem('loggedIn')) {
       navigate("/login", { replace: true });
       return;
     }

@@ -6,9 +6,8 @@ import Webrtcconnection from "../../context/webrtc/webrtcconnection";
 import Webrtccontext from "../../context/webrtc/Webrtccontext";
 import { useEffect } from "react";
 const Bottombar = () => {
-  const [video, setVideo] = useState(true);
   const [microphone, setMicrophone] = useState(false);
-  const { videoOn, videoOff, handlemessage, leaveCall } = useContext(Webrtccontext);
+  const { audioOn, videoOn, videoOff, handlemessage, leaveCall, video, setVideo } = useContext(Webrtccontext);
   const turnOn = (event) => {
     let id = event.target.id;
     let icon = event.target;
@@ -29,7 +28,10 @@ const Bottombar = () => {
   };
   useEffect(() => {
     video ? videoOn(video, microphone) : videoOff();
-  }, [video, microphone]);
+  }, [video]);
+  useEffect(() => {
+    audioOn(microphone)
+  }, [microphone])
   return (
     <div className="d-flex justify-content-center">
       <nav className="border-3 d-flex flex-fill border border-secondary bg-white bottombar-width px-5 navbar navbar-expand navbar-white">
@@ -45,7 +47,7 @@ const Bottombar = () => {
             />
             <li
               id="video"
-              className="nav-link fa-solid fa-video-slash nav-item rounded-pill button-icons button-icons-off me-3"
+              className="nav-link fa-solid fa-video nav-item rounded-pill button-icons me-3"
               data-bs-toggle="tooltip"
               data-bs-placement="right"
               title="Video"
