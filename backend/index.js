@@ -36,7 +36,6 @@ app.use(
   );
 app.use("/auth",require("./routes/intervieweeAuth"))
 app.use("/api/email",require("./routes/email"))
-app.use("/api/compiler",require("./routes/compiler"))
 //socket code
 
 server.listen(3006,()=>{

@@ -15,8 +15,8 @@ passport.use(
       clientID:
         "473509240448-erpijneig6pfjtreiut7ngede225ru5f.apps.googleusercontent.com", // Your Credentials here.
       clientSecret: "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", // Your Credentials here.
-      // callbackURL: "http://localhost:3006/auth/google/callback",
-      callbackURL: "https://interviewplatformbackend.onrender.com/auth/google/callback",
+      callbackURL: "http://localhost:3006/auth/google/callback",
+      // callbackURL: "https://interviewplatformbackend.onrender.com/auth/google/callback",
       passReqToCallback: true,
       scope: [
         "profile",
@@ -27,7 +27,6 @@ passport.use(
       ],
     },
     async function (request, accessToken, refreshToken, profile, done) {
-      console.log("refreshtoken", refreshToken);
 
       try {
         // var userData = {
@@ -41,8 +40,6 @@ passport.use(
         };
         const AUTHTOKEN = jwt.sign(data, JWT_SECRET);
         const interviewer = await Interviewer.findOne({ googleId: profile.id });
-        //  interviewer.AUTHTOKEN=AUTHTOKEN
-        //  console.log("sukhdlf"+interviewer);
         var userData = {
           user: interviewer,
           AUTHTOKEN: AUTHTOKEN,

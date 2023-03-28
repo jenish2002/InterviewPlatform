@@ -11,8 +11,8 @@ function Login() {
     ev.preventDefault();
     localStorage.setItem('loggedIn', true)
     setLogin(true);
-    // window.open("http://localhost:3006/auth/google", "_self");
-    window.open("https://interviewplatformbackend.onrender.com/auth/google", "_self");
+    window.open("http://localhost:3006/auth/google", "_self");
+    // window.open("https://interviewplatformbackend.onrender.com/auth/google", "_self");
   };
   useEffect(() => {
     if(localStorage.getItem('loggedIn')) {

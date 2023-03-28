@@ -5,11 +5,8 @@ var fetchuser = require('../middleware/fetchuser');
 const router = express.Router();
 const sendEmail=require("../services/sendMailByClient")
 router.post("/send",fetchuser,async(req,res)=>{
-    console.log(req.body);
     try {
         const User=await Interviewer.findOne({email:req.body.from});
-
-        //  console.log(interviewer);
          if(!User){
             res.status(400).json("User With This Email is Doesn't Exists")
          }

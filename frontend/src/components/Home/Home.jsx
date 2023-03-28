@@ -16,7 +16,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      {!callAccepted && <Main />}
+      {!callAccepted && <Main />})
     </>
   );
 };

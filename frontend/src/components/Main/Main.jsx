@@ -12,8 +12,8 @@ function Main() {
     const userEmail = JSON.parse(localStorage.getItem("user")).email;
     console.log(userEmail);
     try {
-      // const response = await fetch(`http://localhost:3006/api/email/send`, {
-        const response = await fetch(`https://interviewplatformbackend.onrender.com/api/email/send`, {
+      const response = await fetch(`http://localhost:3006/api/email/send`, {
+        // const response = await fetch(`https://interviewplatformbackend.onrender.com/api/email/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,8 +49,8 @@ function Main() {
     }
     else {
       (async () => {
-        // const request = await fetch("http://localhost:3006/auth/login/success", {
-          const request = await fetch("https://interviewplatformbackend.onrender.com/auth/login/success", {
+        const request = await fetch("http://localhost:3006/auth/login/success", {
+          // const request = await fetch("https://interviewplatformbackend.onrender.com/auth/login/success", {
           method: "GET",
           credentials: "include",
           headers: {

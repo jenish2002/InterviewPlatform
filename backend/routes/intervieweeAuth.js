@@ -61,7 +61,6 @@ router.get(
   "/profile",
   passport.authenticate("google", { session: false }),
   function (req, res) {
-    console.log(req);
     res.send("Welcome, " + req.user.displayName);
   }
 );
